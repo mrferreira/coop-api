@@ -18,6 +18,10 @@ public class ErrorMessage {
     protected String jaVotou;
     @Value("${msg.cpf.cannot.vote}")
     protected String cannotVote;
+    @Value("${msg.cpf.invalido}")
+    protected String cpfInvalido;
+    @Value("${msg.pauta.invalida}")
+    private String pautaInvalida;
 
     public String getMensagem() {
         return mensagem;
@@ -50,5 +54,13 @@ public class ErrorMessage {
 
     public ErrorMessage cannotVote() {
         return this.setMensagem(this.cannotVote);
+    }
+
+    public ErrorMessage cpfInvalido() {
+        return this.setMensagem(this.cpfInvalido);
+    }
+
+    public ErrorMessage pautaInvalida() {
+        return this.setMensagem(this.pautaInvalida);
     }
 }
