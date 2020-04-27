@@ -10,10 +10,14 @@ public class ErrorMessage {
 
     @Value("${msg.session.closed}")
     protected String sessionClosed;
+    @Value("${msg.session.inexistent}")
+    protected String sessionInexistent;
     @Value("${msg.votacao.invalida}")
     protected String votacaoInvalida;
     @Value("${msg.ja.votou}")
     protected String jaVotou;
+    @Value("${msg.cpf.cannot.vote}")
+    protected String cannotVote;
 
     public String getMensagem() {
         return mensagem;
@@ -38,5 +42,13 @@ public class ErrorMessage {
 
     public ErrorMessage javotou() {
         return this.setMensagem(this.jaVotou);
+    }
+
+    public ErrorMessage sessionInexistent() {
+        return this.setMensagem(this.sessionInexistent);
+    }
+
+    public ErrorMessage cannotVote() {
+        return this.setMensagem(this.cannotVote);
     }
 }
