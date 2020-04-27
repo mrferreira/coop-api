@@ -28,13 +28,6 @@ public class PautaController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Cadastrado!");
     }
 
-    @PostMapping(value = "/pauta",
-        produces = "application/vnd.mferreira.coopapi.v1+json")
-    public ResponseEntity<PautaVO> cadastrarV2(@RequestBody PautaVO payload) {
-        Pauta saved = pautaRepository.save(mappingUtil.convertObject(payload, Pauta.class));
-        return ResponseEntity.status(HttpStatus.CREATED).body(mappingUtil.convertObject(saved, PautaVO.class));
-    }
-
     @GetMapping("/pauta")
     public ResponseEntity<List<PautaVO>> listActive() {
         List<Pauta> active = pautaRepository.findByActiveTrue();
@@ -49,16 +42,6 @@ public class PautaController {
         Optional<Pauta> found = pautaRepository.findById(id);
         if(found.isPresent()) {
             return ResponseEntity.ok().body(mappingUtil.convertObject(found.get(), PautaVO.class));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @GetMapping(value = "/pauta/{id}",
-            produces = "application/vnd.mferreira.coopapi.v2+json")
-    public ResponseEntity getV2(@PathVariable Long id) {
-        Optional<Pauta> found = pautaRepository.findById(id);
-        if(found.isPresent()) {
-            return ResponseEntity.ok().body(found.get().getNome());
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
