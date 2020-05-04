@@ -1,5 +1,7 @@
 package com.mferreira.coopapi.service;
 
+import com.mferreira.coopapi.configuration.MessagesComponent;
+import com.mferreira.coopapi.configuration.MessagesConfiguration;
 import com.mferreira.coopapi.exception.BusinessException;
 import com.mferreira.coopapi.exception.ErrorMessage;
 import com.mferreira.coopapi.vo.ValidacaoCPFResultVO;
@@ -19,16 +21,20 @@ public class RequestService {
     public static final Logger LOGGER = LoggerFactory.getLogger(RequestService.class.getName());
 
     RestTemplate restTemplate;
-    @Value("${url.validador.cpf}")
     private String validadorCPFUrl;
-    @Value("${msg.able.to.vote}")
     private String msgAbleToVote;
-    @Autowired
     private ErrorMessage errorMessage;
+    private MessagesConfiguration messagesConfiguration;
 
-    public RequestService(RestTemplate restTemplate) {
+    public RequestService(RestTemplate restTemplate,
+                          ErrorMessage errorMessage,
+                          MessagesConfiguration messagesConfiguration) {
+        this.errorMessage = errorMessage;
+        this.messagesConfiguration = messagesConfiguration ;
         this.restTemplate = restTemplate;
-    }
+        this.validadorCPFUrl = messagesConfiguration.get("url.validador.cpf");
+        this.msgAbleToVote = messagesConfiguration.get("msg.able.to.vote");
+}
 
     public boolean isAbleToVote(String cpf) {
         if(cpf == null || cpf.isEmpty()) {

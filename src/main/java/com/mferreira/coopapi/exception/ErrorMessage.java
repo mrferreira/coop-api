@@ -1,5 +1,7 @@
 package com.mferreira.coopapi.exception;
 
+import com.mferreira.coopapi.configuration.MessagesConfiguration;
+import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -9,21 +11,35 @@ public class ErrorMessage {
 
     private String mensagem;
     private HttpStatus status;
+    private MessagesConfiguration messagesConfiguration;
+    protected final String sessionClosed;
+    protected final String sessionInexistent;
+    protected final String votacaoInvalida;
+    protected final String sessaoInvalida;
+    protected final String opcaoInvalida;
+    protected final String jaVotou;
+    protected final String cannotVote;
+    protected final String cpfInvalido;
+    protected final String pautaInvalida;
+    protected final String pautaJaExisteComNome;
+    protected final String insertException;
+    protected final String searchException;
 
-    @Value("${msg.session.closed}")
-    protected String sessionClosed;
-    @Value("${msg.session.inexistent}")
-    protected String sessionInexistent;
-    @Value("${msg.votacao.invalida}")
-    protected String votacaoInvalida;
-    @Value("${msg.ja.votou}")
-    protected String jaVotou;
-    @Value("${msg.cpf.cannot.vote}")
-    protected String cannotVote;
-    @Value("${msg.cpf.invalido}")
-    protected String cpfInvalido;
-    @Value("${msg.pauta.invalida}")
-    private String pautaInvalida;
+    public ErrorMessage(MessagesConfiguration messagesConfiguration) {
+        this.messagesConfiguration = messagesConfiguration;
+        this.sessionClosed = messagesConfiguration.get("msg.session.closed");
+        this.sessionInexistent = messagesConfiguration.get("msg.session.inexistent");
+        this.votacaoInvalida = messagesConfiguration.get("msg.votacao.invalida");
+        this.sessaoInvalida = messagesConfiguration.get("msg.sessao.invalida");
+        this.opcaoInvalida = messagesConfiguration.get("msg.opcao.invalida");
+        this.jaVotou = messagesConfiguration.get("msg.ja.votou");
+        this.cannotVote = messagesConfiguration.get("msg.cpf.cannot.vote");
+        this.cpfInvalido = messagesConfiguration.get("msg.cpf.invalido");
+        this.pautaInvalida = messagesConfiguration.get("msg.pauta.invalida");
+        this.pautaJaExisteComNome = messagesConfiguration.get("msg.pauta.ja.existe.nome");
+        this.insertException = messagesConfiguration.get("msg.err.internal.insert.exception");
+        this.searchException = messagesConfiguration.get("msg.err.internal.search.exception");
+    }
 
     public String getMensagem() {
         return mensagem;
@@ -45,6 +61,16 @@ public class ErrorMessage {
 
     public ErrorMessage votacaoInvalida() {
         return this.setMensagem(this.votacaoInvalida)
+                .setStatus(HttpStatus.BAD_REQUEST);
+    }
+
+    public ErrorMessage sessaoInvalida() {
+        return this.setMensagem(this.sessaoInvalida)
+                .setStatus(HttpStatus.BAD_REQUEST);
+    }
+
+    public ErrorMessage opcaoInvalida() {
+        return this.setMensagem(this.opcaoInvalida)
                 .setStatus(HttpStatus.BAD_REQUEST);
     }
 
@@ -73,6 +99,21 @@ public class ErrorMessage {
                 .setStatus(HttpStatus.BAD_REQUEST);
     }
 
+    public ErrorMessage pautaJaExisteComNome() {
+        return this.setMensagem(this.pautaJaExisteComNome)
+                .setStatus(HttpStatus.BAD_REQUEST);
+    }
+
+    public ErrorMessage insertException() {
+        return this.setMensagem(this.insertException)
+                .setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public ErrorMessage searchException() {
+        return this.setMensagem(this.searchException)
+                .setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     public ErrorMessage setStatus(HttpStatus status) {
         this.status = status;
         return this;
@@ -81,4 +122,9 @@ public class ErrorMessage {
     public HttpStatus getStatus() {
         return this.status;
     }
+
+    public void setMessagesConfiguration(MessagesConfiguration configuration) {
+        this.messagesConfiguration = configuration;
+    }
+
 }

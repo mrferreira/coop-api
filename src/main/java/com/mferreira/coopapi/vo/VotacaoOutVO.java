@@ -1,17 +1,18 @@
 package com.mferreira.coopapi.vo;
 
-public class VotacaoEntryVO {
+public class VotacaoOutVO {
 
+    private Long id;
     private String cpf;
     private String opcao;
-    private SessaoVotacaoEntryVO sessao;
+    private SessaoEntryVO sessao;
 
-    public VotacaoEntryVO() {}
+    public Long getId() {
+        return id;
+    }
 
-    public VotacaoEntryVO(String cpf, String opcao, SessaoVotacaoEntryVO sessao) {
-        this.cpf = cpf;
-        this.opcao = opcao;
-        this.sessao = sessao;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCpf() {
@@ -30,11 +31,11 @@ public class VotacaoEntryVO {
         this.opcao = opcao;
     }
 
-    public SessaoVotacaoEntryVO getSessao() {
+    public SessaoEntryVO getSessao() {
         return sessao;
     }
 
-    public void setSessao(SessaoVotacaoEntryVO sessao) {
+    public void setSessao(SessaoEntryVO sessao) {
         this.sessao = sessao;
     }
 }

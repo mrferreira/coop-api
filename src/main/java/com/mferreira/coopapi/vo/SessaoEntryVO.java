@@ -1,33 +1,25 @@
 package com.mferreira.coopapi.vo;
 
-import com.mferreira.coopapi.model.Pauta;
-
 import java.util.Date;
 
 public class SessaoEntryVO {
-    private Pauta pauta;
+    private PautaSessaoEntryVO pauta;
     private Date inicio;
     private Date fim;
-    private Date createdAt;
-    private Date updatedAt;
-    private Boolean active = true;
 
     public SessaoEntryVO() {}
 
-    public SessaoEntryVO(Pauta pauta, Date inicio, Date fim, Date createdAt, Date modifiedAt, Boolean active) {
+    public SessaoEntryVO(PautaSessaoEntryVO pauta, Date inicio, Date fim) {
         this.pauta = pauta;
         this.inicio = inicio;
         this.fim = fim;
-        this.createdAt = createdAt;
-        this.updatedAt = modifiedAt;
-        this.active = active;
     }
 
-    public Pauta getPauta() {
+    public PautaSessaoEntryVO getPauta() {
         return pauta;
     }
 
-    public void setPauta(Pauta pauta) {
+    public void setPauta(PautaSessaoEntryVO pauta) {
         this.pauta = pauta;
     }
 
@@ -45,29 +37,5 @@ public class SessaoEntryVO {
 
     public void setFim(Date fim) {
         this.fim = fim;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 }

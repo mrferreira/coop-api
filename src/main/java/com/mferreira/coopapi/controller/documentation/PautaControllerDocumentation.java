@@ -16,11 +16,12 @@ public interface PautaControllerDocumentation {
             @ApiParam(name = "payload", value = "VO com os atributos da pauta.") PautaEntryVO payload
     );
     @ApiOperation(value = "Listar todas as pautas ativas", httpMethod = "GET")
-    @ApiResponses({@ApiResponse(code = 201, message = "Sucesso ao consultar registro de pautas."),
+    @ApiResponses({@ApiResponse(code = 200, message = "Sucesso ao consultar registro de pautas."),
+            @ApiResponse(code = 404, message = "Pauta não encontrada com o id informado."),
             @ApiResponse(code = 500, message = "Erro interno no processamento da requisição.")})
     ResponseEntity listActive();
     @ApiOperation(value = "Buscar pelo id da pauta.", httpMethod = "GET")
-    @ApiResponses({@ApiResponse(code = 201, message = "Sucesso na consulta da pauta pelo id."),
+    @ApiResponses({@ApiResponse(code = 200, message = "Sucesso na consulta da pauta pelo id."),
             @ApiResponse(code = 404, message = "Pauta não encontrada com o id informado."),
             @ApiResponse(code = 500, message = "Erro interno no processamento da requisição.")})
     ResponseEntity get(

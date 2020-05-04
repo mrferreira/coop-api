@@ -2,6 +2,7 @@ package com.mferreira.coopapi.configuration;
 
 import com.mferreira.coopapi.exception.BusinessException;
 import com.mferreira.coopapi.exception.ErrorMessage;
+import com.mferreira.coopapi.exception.NullValueException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,5 +26,10 @@ public class GlobalRestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleAccessConflict(BusinessException ex, WebRequest req) {
         return handleExceptionInternal(ex, errorMessage.json(),
                 new HttpHeaders(), ex.getStatus(), req);
+    }
+
+    @ExceptionHandler({NullValueException.class})
+    public final ResponseEntity<Object> handleNullValue() {
+        return new ResponseEntity("", HttpStatus.NO_CONTENT);
     }
 }

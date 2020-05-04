@@ -1,66 +1,62 @@
-package com.mferreira.coopapi.controller;
+package com.mferreira.coopapi.service;
 
-import com.mferreira.coopapi.controller.documentation.VotoControllerDocumentation;
 import com.mferreira.coopapi.exception.BusinessException;
 import com.mferreira.coopapi.exception.ErrorMessage;
+import com.mferreira.coopapi.exception.NullValueException;
+import com.mferreira.coopapi.model.Pauta;
 import com.mferreira.coopapi.model.Sessao;
 import com.mferreira.coopapi.model.Voto;
+import com.mferreira.coopapi.repository.PautaRepository;
 import com.mferreira.coopapi.repository.SessaoRepository;
 import com.mferreira.coopapi.repository.VotoRepository;
-import com.mferreira.coopapi.service.RequestService;
 import com.mferreira.coopapi.utils.MappingUtil;
-import com.mferreira.coopapi.vo.ResultadoVotacaoVO;
-import com.mferreira.coopapi.vo.VotacaoEntryVO;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.mferreira.coopapi.vo.*;
+import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import java.util.*;
+import java.util.stream.Collectors;
 
-@RestController
-@ResponseBody
-@RequestMapping("/sessao")
-public class VotoController implements VotoControllerDocumentation {
+@Service
+public class VotacaoService {
 
-    private SessaoRepository sessaoRepository;
-    private VotoRepository votoRepository;
-    private RequestService requestService;
-    private ErrorMessage errorMessage;
-    @Value("${msg.votacao.salva}")
-    private String votacaoSalva;
+    private final RequestService requestService;
+    private final MappingUtil mappingUtil;
+    private final SessaoRepository sessaoRepository;
+    private final PautaRepository pautaRepository;
+    private final VotoRepository votoRepository;
+    private final ErrorMessage errorMessage;
 
-    public VotoController(SessaoRepository sessaoRepository,
-                          VotoRepository votoRepository,
-                          ErrorMessage errorMessage,
-                          RequestService requestService) {
+
+    public VotacaoService(
+            RequestService requestService,
+            SessaoRepository sessaoRepository,
+            PautaRepository pautaRepository,
+            VotoRepository votoRepository,
+            ErrorMessage errorMessage) {
+        this.requestService = requestService;
+        this.mappingUtil = new MappingUtil();
+        this.pautaRepository = pautaRepository;
         this.sessaoRepository = sessaoRepository;
         this.votoRepository = votoRepository;
         this.errorMessage = errorMessage;
-        this.requestService = requestService;
     }
 
-
-    @PostMapping("/{sessionId}/votar")
-    public ResponseEntity<String> votar(@PathVariable Long sessionId,
-                                  @RequestBody VotacaoEntryVO payload) {
-        validarPayload(payload);
+    public Optional<VotacaoOutVO> votar(Long sessionId, VotacaoEntryVO payload) {
+        validarPayload(sessionId, payload);
         Sessao sessao = sessaoRepository.getOne(sessionId);
         validarSessao(sessao);
         validarJaVotou(payload.getCpf(),sessao);
         Voto voto = new MappingUtil().convertObject(payload, Voto.class);
         voto.setSessao(sessao);
-        votoRepository.save(voto);
-        return ResponseEntity.ok(votacaoSalva);
+        Voto saved = votoRepository.save(voto);
+        return Optional.of(mappingUtil.convertObject(saved, VotacaoOutVO.class));
     }
 
-    @GetMapping("/{sessionId}/resultado")
-    public ResponseEntity<ResultadoVotacaoVO> contabilizarResultado(@PathVariable Long sessionId) {
+    public Optional<ResultadoVotacaoVO> contabilizarVoto(Long sessionId) {
         List<Voto> votos = votoRepository.findBySessaoId(sessionId);
         ResultadoVotacaoVO resultado = prepararResultado(votos, sessionId);
-        return ResponseEntity.ok(resultado);
+        return Optional.of(resultado);
     }
 
     private ResultadoVotacaoVO prepararResultado(List<Voto> votos, Long sessionId) {
@@ -102,7 +98,14 @@ public class VotoController implements VotoControllerDocumentation {
         }
     }
 
-    public void validarPayload(VotacaoEntryVO payload) {
+    public void validarPayload(Long sessionId, VotacaoEntryVO payload) {
+        if(sessionId == null) {
+            throw new BusinessException(errorMessage.sessaoInvalida());
+        }
+
+        if(payload.getOpcao() == null || payload.getOpcao().trim().isEmpty()) {
+            throw new BusinessException(errorMessage.opcaoInvalida());
+        }
         String compare = payload.getOpcao().toUpperCase();
         if(payload == null ||
                 !Arrays.asList("SIM", "NÃO").stream()
@@ -117,5 +120,4 @@ public class VotoController implements VotoControllerDocumentation {
     private boolean canVote(String cpf) {
         return requestService.isAbleToVote(cpf);
     }
-
 }

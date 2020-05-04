@@ -2,6 +2,7 @@ package com.mferreira.coopapi.utils;
 
 import com.mferreira.coopapi.model.Pauta;
 import com.mferreira.coopapi.vo.PautaEntryVO;
+import com.mferreira.coopapi.vo.PautaOutVO;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -19,7 +20,7 @@ class MappingUtilTest {
         pauta.setId(1000L);
         pauta.setActive(true);
 
-        PautaEntryVO vo = mappingUtil.convertObject(pauta, PautaEntryVO.class);
+        PautaOutVO vo = mappingUtil.convertObject(pauta, PautaOutVO.class);
 
         assertEquals(pauta.getId(), vo.getId());
         assertEquals(pauta.getNome(), vo.getNome());

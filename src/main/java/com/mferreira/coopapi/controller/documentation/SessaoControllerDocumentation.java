@@ -16,13 +16,13 @@ public interface SessaoControllerDocumentation {
             @ApiParam(name = "payload", value = "VO com os atributos da sessão") SessaoEntryVO payload);
     @ApiOperation(value = "Listar todas as sessões", httpMethod = "GET")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Sucesso ao consultar registro de sessões"),
+            @ApiResponse(code = 200, message = "Sucesso ao consultar registro de sessões"),
             @ApiResponse(code = 500, message = "Erro interno no processamento da requisição")
     })
     ResponseEntity getAll();
     @ApiOperation(value = "Buscar pelo id da sessão", httpMethod = "GET")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Sucesso na consulta da sessão pelo id"),
+            @ApiResponse(code = 200, message = "Sucesso na consulta da sessão pelo id"),
             @ApiResponse(code = 404, message = "Sessão não encontrada com o id informado"),
             @ApiResponse(code = 500, message = "Erro interno no processamento da requisição")
     })

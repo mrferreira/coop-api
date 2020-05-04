@@ -9,4 +9,6 @@ public interface PautaRepository extends JpaRepository<Pauta, Long> {
     public List<Pauta> findByNomeContaining(String nome);
 
     List<Pauta> findByActiveTrue();
+
+    Pauta findByNome(String nome);
 }

@@ -20,7 +20,7 @@ public interface VotoControllerDocumentation {
     );
 
     @ApiOperation(value = "Exibir resultado da votação", httpMethod = "GET")
-    @ApiResponses({@ApiResponse(code = 201, message = "Sucesso ao consultar resultado da votação"),
+    @ApiResponses({@ApiResponse(code = 200, message = "Sucesso ao consultar resultado da votação"),
             @ApiResponse(code = 404, message = "Sessão não encontrada com o sessionId informado"),
             @ApiResponse(code = 500, message = "Erro interno no processamento da requisição")})
     ResponseEntity<ResultadoVotacaoVO> contabilizarResultado(

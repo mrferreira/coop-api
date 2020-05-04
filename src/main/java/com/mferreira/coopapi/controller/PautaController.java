@@ -1,12 +1,14 @@
 package com.mferreira.coopapi.controller;
 
 import com.mferreira.coopapi.controller.documentation.PautaControllerDocumentation;
+import com.mferreira.coopapi.exception.BusinessException;
+import com.mferreira.coopapi.exception.ErrorMessage;
 import com.mferreira.coopapi.model.Pauta;
-import com.mferreira.coopapi.repository.PautaRepository;
+import com.mferreira.coopapi.service.PautaService;
 import com.mferreira.coopapi.utils.MappingUtil;
 import com.mferreira.coopapi.vo.PautaEntryVO;
 import com.mferreira.coopapi.vo.PautaOutVO;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.models.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,49 +21,58 @@ import java.util.stream.Collectors;
 @ResponseBody
 public class PautaController implements PautaControllerDocumentation {
 
-    @Autowired
-    PautaRepository pautaRepository;
+    private final PautaService pautaService;
+    private final MappingUtil mappingUtil;
+    private ErrorMessage errorMessage;
 
-    MappingUtil mappingUtil = new MappingUtil();
+    public PautaController(PautaService service,
+                           ErrorMessage errorMessage) {
+        this.pautaService = service;
+        this.errorMessage = errorMessage;
+        this.mappingUtil = new MappingUtil();
+    }
 
     @PostMapping("/pauta")
-    public ResponseEntity cadastrar(@RequestBody PautaEntryVO payload) {
-        Pauta saved = pautaRepository.save(mappingUtil.convertObject(payload, Pauta.class));
-        return ResponseEntity.status(HttpStatus.CREATED).body("Cadastrado!");
+    public ResponseEntity<String> cadastrar(@RequestBody PautaEntryVO payload) {
+        return pautaService.save(payload)
+                .map(res -> ResponseEntity.status(HttpStatus.CREATED).body("CREATED"))
+                .orElseThrow(() -> new BusinessException(errorMessage.insertException()));
     }
 
     @PostMapping(value = "/pauta",
         produces = "application/vnd.mferreira.coopapi.v1+json")
-    public ResponseEntity<PautaEntryVO> cadastrarV2(@RequestBody PautaEntryVO payload) {
-        Pauta saved = pautaRepository.save(mappingUtil.convertObject(payload, Pauta.class));
-        return ResponseEntity.status(HttpStatus.CREATED).body(mappingUtil.convertObject(saved, PautaEntryVO.class));
+    public ResponseEntity<PautaOutVO> cadastrarV2(@RequestBody PautaEntryVO payload) {
+        return pautaService.save(payload)
+                .map(res -> ResponseEntity.status(HttpStatus.CREATED).body(res))
+                .orElseThrow(() -> new BusinessException(errorMessage.insertException()));
     }
 
     @GetMapping("/pauta")
-    public ResponseEntity listActive() {
-        List<Pauta> active = pautaRepository.findByActiveTrue();
-        return ResponseEntity.ok().body(active.stream()
-                .map(m -> mappingUtil.convertObject(m, PautaOutVO.class))
-                .collect(Collectors.toList()));
+    public ResponseEntity<List<PautaOutVO>> listActive() {
+        return pautaService.getAll()
+                .map(list ->
+                        ResponseEntity.ok().body(
+                            list.stream()
+                                    .map(m -> mappingUtil.convertObject(m, PautaOutVO.class))
+                                    .collect(Collectors.toList())
+                        )
+                )
+                .orElseThrow(() -> new BusinessException(errorMessage.searchException()));
     }
 
     @GetMapping(value = "/pauta/{id}",
             produces = "application/vnd.mferreira.coopapi.v1+json")
-    public ResponseEntity get(@PathVariable Long id) {
-        Optional<Pauta> found = pautaRepository.findById(id);
-        if(found.isPresent()) {
-            return ResponseEntity.ok().body(mappingUtil.convertObject(found.get(), PautaOutVO.class));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<PautaOutVO> get(@PathVariable Long id) {
+        return pautaService.get(id)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new BusinessException(errorMessage.searchException()));
     }
 
     @GetMapping(value = "/pauta/{id}",
             produces = "application/vnd.mferreira.coopapi.v2+json")
-    public ResponseEntity getV2(@PathVariable Long id) {
-        Optional<Pauta> found = pautaRepository.findById(id);
-        if(found.isPresent()) {
-            return ResponseEntity.ok().body(found.get().getNome());
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<String> getV2(@PathVariable Long id) {
+        return pautaService.get(id)
+            .map(r -> ResponseEntity.ok().body(r.getNome()))
+            .orElseThrow(() -> new BusinessException(errorMessage.searchException()));
     }
 }
