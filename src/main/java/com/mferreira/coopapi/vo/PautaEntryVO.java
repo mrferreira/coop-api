@@ -4,31 +4,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
-public class PautaVO {
-    private Long id;
+public class PautaEntryVO {
     private String nome;
     private Date createdAt;
     private Date updatedAt;
     private Boolean active = true;
 
-    public PautaVO() {}
+    public PautaEntryVO() {}
 
-    public PautaVO(Long id, String nome,
-                   Date createdAt, Date updatedAt) {
-        this.id = id;
+    public PautaEntryVO(String nome,
+                        Date createdAt, Date updatedAt) {
         this.nome = nome;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    
     public String getNome() {
         return nome;
     }

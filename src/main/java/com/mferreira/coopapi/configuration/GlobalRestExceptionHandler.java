@@ -22,8 +22,8 @@ public class GlobalRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {BusinessException.class})
-    protected ResponseEntity<Object> handleAccessConflict(RuntimeException ex, WebRequest req) {
+    protected ResponseEntity<Object> handleAccessConflict(BusinessException ex, WebRequest req) {
         return handleExceptionInternal(ex, errorMessage.json(),
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, req);
+                new HttpHeaders(), ex.getStatus(), req);
     }
 }

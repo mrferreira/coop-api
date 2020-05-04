@@ -31,6 +31,6 @@ class RequestServiceTest {
     @Test
     public void shouldReturnResponseType() {
         ValidacaoCPFResultVO vo = requestService.getResponse("https://user-info.herokuapp.com/users/", "19839091069");
-        assertTrue(Arrays.asList("UNABLE_TO_VOTE", "ABLE_TO_VOTE").stream().anyMatch(f -> f == vo.getStatus()));
+        assertTrue(Arrays.asList("UNABLE_TO_VOTE", "ABLE_TO_VOTE").contains(vo.getStatus()));
     }
 }

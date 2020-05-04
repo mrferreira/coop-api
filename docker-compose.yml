@@ -4,12 +4,13 @@ services:
     build: .
     environment:
       JDBC_URL: jdbc:mysql://mysql:3306/softdesign?user=root&password=secret
+    restart: always
     links:
       - mysql:mysql
     networks:
       - mysql-compose-network
     ports:
-    - 8080:8080
+      - 8080:8080
   mysql:
     image: mysql:5.7
     environment:

@@ -1,5 +1,6 @@
 package com.mferreira.coopapi.controller;
 
+import com.mferreira.coopapi.controller.documentation.VotoControllerDocumentation;
 import com.mferreira.coopapi.exception.BusinessException;
 import com.mferreira.coopapi.exception.ErrorMessage;
 import com.mferreira.coopapi.model.Sessao;
@@ -22,7 +23,7 @@ import java.util.List;
 @RestController
 @ResponseBody
 @RequestMapping("/sessao")
-public class VotoController {
+public class VotoController implements VotoControllerDocumentation {
 
     private SessaoRepository sessaoRepository;
     private VotoRepository votoRepository;

@@ -4,7 +4,7 @@ public class VotacaoEntryVO {
 
     private String cpf;
     private String opcao;
-    private SessaoVO sessao;
+    private SessaoEntryVO sessao;
 
     public String getCpf() {
         return cpf;
@@ -22,11 +22,11 @@ public class VotacaoEntryVO {
         this.opcao = opcao;
     }
 
-    public SessaoVO getSessao() {
+    public SessaoEntryVO getSessao() {
         return sessao;
     }
 
-    public void setSessao(SessaoVO sessao) {
+    public void setSessao(SessaoEntryVO sessao) {
         this.sessao = sessao;
     }
 }

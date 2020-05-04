@@ -4,7 +4,7 @@ import com.mferreira.coopapi.model.Pauta;
 
 import java.util.Date;
 
-public class SessaoVO {
+public class SessaoOutVO {
     private Long id;
     private Pauta pauta;
     private Date inicio;
@@ -13,9 +13,9 @@ public class SessaoVO {
     private Date updatedAt;
     private Boolean active = true;
 
-    public SessaoVO() {}
+    public SessaoOutVO() {}
 
-    public SessaoVO(Long id, Pauta pauta, Date inicio, Date fim, Date createdAt, Date modifiedAt, Boolean active) {
+    public SessaoOutVO(Long id, Pauta pauta, Date inicio, Date fim, Date createdAt, Date modifiedAt, Boolean active) {
         this.id = id;
         this.pauta = pauta;
         this.inicio = inicio;
