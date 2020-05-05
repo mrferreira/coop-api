@@ -32,16 +32,9 @@ public class PautaController implements PautaControllerDocumentation {
         this.mappingUtil = new MappingUtil();
     }
 
-    @PostMapping("/pauta")
-    public ResponseEntity<String> cadastrar(@RequestBody PautaEntryVO payload) {
-        return pautaService.save(payload)
-                .map(res -> ResponseEntity.status(HttpStatus.CREATED).body("CREATED"))
-                .orElseThrow(() -> new BusinessException(errorMessage.insertException()));
-    }
-
     @PostMapping(value = "/pauta",
-        produces = "application/vnd.mferreira.coopapi.v1+json")
-    public ResponseEntity<PautaOutVO> cadastrarV2(@RequestBody PautaEntryVO payload) {
+        produces = "application/vnd.mferreira.coopapi.v2+json")
+    public ResponseEntity<PautaOutVO> cadastrar(@RequestBody PautaEntryVO payload) {
         return pautaService.save(payload)
                 .map(res -> ResponseEntity.status(HttpStatus.CREATED).body(res))
                 .orElseThrow(() -> new BusinessException(errorMessage.insertException()));
@@ -61,16 +54,8 @@ public class PautaController implements PautaControllerDocumentation {
     }
 
     @GetMapping(value = "/pauta/{id}",
-            produces = "application/vnd.mferreira.coopapi.v1+json")
-    public ResponseEntity<PautaOutVO> get(@PathVariable Long id) {
-        return pautaService.get(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new BusinessException(errorMessage.searchException()));
-    }
-
-    @GetMapping(value = "/pauta/{id}",
             produces = "application/vnd.mferreira.coopapi.v2+json")
-    public ResponseEntity<String> getV2(@PathVariable Long id) {
+    public ResponseEntity<String> get(@PathVariable Long id) {
         return pautaService.get(id)
             .map(r -> ResponseEntity.ok().body(r.getNome()))
             .orElseThrow(() -> new BusinessException(errorMessage.searchException()));
